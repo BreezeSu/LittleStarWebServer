@@ -10,6 +10,12 @@ import org.apache.log4j.Logger;
 import model.PhotoInfoRestModel;
 import model.PhotoInfoSO;
 
+/**
+ * 数据库服务类
+ *
+ * @author Su
+ *
+ */
 public class DBService
 {
 
@@ -17,6 +23,12 @@ public class DBService
 
 	private final String tableName = "photoinfo";
 
+	/**
+	 * 插入图片信息
+	 *
+	 * @param photoList
+	 *            图片列表
+	 */
 	public void insertPhotoInfo(List<PhotoInfoRestModel> photoList)
 	{
 		final String insertHead = "insert into " + tableName + " (name) values ";
@@ -29,6 +41,13 @@ public class DBService
 
 	}
 
+	/**
+	 * 查询图片信息
+	 * 
+	 * @param so
+	 *            图片搜索条件
+	 * @return 图片信息列表
+	 */
 	public List<PhotoInfoRestModel> queryPhotoInfo(PhotoInfoSO so)
 	{
 		final List<PhotoInfoRestModel> photoInfoList = new ArrayList<PhotoInfoRestModel>(20);

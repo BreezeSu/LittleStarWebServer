@@ -3,6 +3,7 @@ package service;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
 
 import common.Constant;
 import model.PhotoInfoRestModel;
+import net.coobird.thumbnailator.Thumbnails;
 
 /**
  * 图片信息收集类
@@ -28,6 +30,30 @@ public class PhotoInfoCollector
 {
 
 	private final Logger log = Logger.getLogger(PhotoInfoCollector.class);
+
+	/**
+	 * 单例
+	 */
+	private static PhotoInfoCollector INSTANCE;
+
+	private PhotoInfoCollector()
+	{
+
+	}
+
+	/**
+	 * 获取单例的方法
+	 *
+	 * @return 单例
+	 */
+	public static PhotoInfoCollector getInstance()
+	{
+		if (INSTANCE == null)
+		{
+			INSTANCE = new PhotoInfoCollector();
+		}
+		return INSTANCE;
+	}
 
 	private final List<PhotoInfoRestModel> photoInfoList = new ArrayList<PhotoInfoRestModel>();
 
@@ -111,6 +137,26 @@ public class PhotoInfoCollector
 				}
 			}
 			return false;
+		}
+	}
+
+	/**
+	 * 获取图片的缩略图
+	 *
+	 * @param photoUrl
+	 *            图片的绝对地址
+	 * @param outputStr
+	 *            生成缩略图的OUT流，这里主要是往httpResponse里写流。
+	 */
+	public void snapView(String photoUrl, OutputStream outputStr)
+	{
+		try
+		{
+			Thumbnails.of(photoUrl).size(200, 300).toOutputStream(outputStr);
+		}
+		catch (final IOException e)
+		{
+			log.error("get Snap view of " + photoUrl + " faild.", e);
 		}
 	}
 }

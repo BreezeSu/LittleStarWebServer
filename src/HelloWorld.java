@@ -39,7 +39,7 @@ public class HelloWorld extends HttpServlet
 		super.init();
 
 		dbService.cleanAllPhotoInfo();
-		dbService.insertPhotoInfo(new PhotoInfoCollector().collectPhotoInfo());
+		dbService.insertPhotoInfo(PhotoInfoCollector.getInstance().collectPhotoInfo());
 	}
 
 	@Override
@@ -70,6 +70,9 @@ public class HelloWorld extends HttpServlet
 				case "pic":
 					getPhotoPic(paraMap, response);
 					break;
+				case "snap":
+					getSnapView(paraMap, response);
+					break;
 			}
 		}
 	}
@@ -80,7 +83,7 @@ public class HelloWorld extends HttpServlet
 		{
 			return false;
 		}
-		else if ("pic".equals(queryType[0]) || "info".equals(queryType[0]))
+		else if ("pic".equals(queryType[0]) || "info".equals(queryType[0]) || "snap".equals(queryType[0]))
 		{
 			return true;
 		}
@@ -135,5 +138,15 @@ public class HelloWorld extends HttpServlet
 			}
 		}
 
+	}
+
+	private void getSnapView(Map<String, String[]> paraMap, HttpServletResponse response)
+	{
+		final String[] name = paraMap.get("name");
+		if (name != null && name.length == 1)
+		{
+			final String photoUrl = Constant.PHOTO_DEFAULT_PATH + "\\" + name[0];
+			ResponseManager.getInstance().getSnapView(photoUrl, response);
+		}
 	}
 }

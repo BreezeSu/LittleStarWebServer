@@ -22,9 +22,23 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 import model.PhotoInfoRestModel;
 
+/**
+ * HTTP响应管理类
+ *
+ * @author Su
+ *
+ */
 public class ResponseManager
 {
+
+	/**
+	 * 日志
+	 */
 	private final Logger log = Logger.getLogger(ResponseManager.class);
+
+	/**
+	 * 单例
+	 */
 	private static ResponseManager INSTANCE;
 
 	private ResponseManager()
@@ -32,6 +46,11 @@ public class ResponseManager
 
 	}
 
+	/**
+	 * 获取单例的方法
+	 *
+	 * @return 单例
+	 */
 	public static ResponseManager getInstance()
 	{
 		if (INSTANCE == null)
@@ -41,6 +60,15 @@ public class ResponseManager
 		return INSTANCE;
 	}
 
+	/**
+	 * 照片信息以JSON形式返回
+	 *
+	 * @param photoInfoList
+	 *            照片信息列表
+	 * @param response
+	 *            HTTP响应
+	 * @return HTTP响应
+	 */
 	public HttpServletResponse getJsonInfo(List<PhotoInfoRestModel> photoInfoList, HttpServletResponse response)
 	{
 
@@ -63,6 +91,17 @@ public class ResponseManager
 		return response;
 	}
 
+	/**
+	 * 获取照片
+	 *
+	 * @param imagePath
+	 *            照片在服务器的绝对地址
+	 * @param response
+	 *            HTTP响应
+	 * @return HTTP响应
+	 * @throws IOException
+	 *             IO异常
+	 */
 	public HttpServletResponse getImageInfo(String imagePath, HttpServletResponse response) throws IOException
 	{
 
@@ -113,6 +152,30 @@ public class ResponseManager
 			bos.close();
 		}
 		output.close();
+		return response;
+	}
+
+	/**
+	 * 获取图片的缩略图
+	 *
+	 * @param imagePath
+	 *            图片在服务器的绝对地址
+	 * @param response
+	 *            HTTP响应
+	 * @return HTTP响应
+	 */
+	public HttpServletResponse getSnapView(String imagePath, HttpServletResponse response)
+	{
+		try
+		{
+			final OutputStream output = response.getOutputStream();
+			PhotoInfoCollector.getInstance().snapView(imagePath, output);
+		}
+		catch (final IOException e)
+		{
+			log.error(e);
+		}
+
 		return response;
 	}
 
